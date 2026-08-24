@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Traffic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Realistic Traffic Density Controller</h1>
+        <p>ML-Based Adaptive Signal Timing</p>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <div class="card">
+                <h3>Global Status</h3>
+                <div class="info-row"><span>Active Phase:</span> <strong id="active-phase">Initializing...</strong></div>
+                <div class="info-row"><span>Description:</span> <span id="phase-desc">Waiting...</span></div>
+                <div class="info-row"><span>Cycle Timer:</span> <strong class="text-glow" id="time-remaining">0s</strong></div>
+            </div>
+        </div>
+
+        <!-- Intersection Layout -->
+        <div class="intersection-wrapper">
+            <div class="intersection-grid">
+                
+                <!-- TOP / NORTH -->
+                <div class="road-cell top-cell">
+                    <div class="upload-section">
+                        <label for="upload-North" class="upload-btn">Upload Image</label>
+                        <input type="file" id="upload-North" accept="image/*" hidden onchange="handleUpload(event, 'North')">
+                        <div class="preview-box">
+                            <button class="close-btn" onclick="removeImage('North')" style="display:none;" id="close-North">&times;</button>
+                            <img id="preview-North" src="" alt="No Image" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="road vertical-road north-road">
+                        <div class="road-label">NORTH</div>
+                        <div class="stats-overlay">
+                            Count: <span id="count-North">0</span><br>
+                            Density: <span id="density-North" class="badge">N/A</span><br>
+                            Allocated Time: <strong id="allocated-North">0s</strong>
+                        </div>
+                        <div class="signal-box signal-north">
+                            <div class="timer" id="timer-North">0s</div>
+                            <div class="lights horizontal-lights">
+                                <div class="bulb red" id="North-red"></div>
+                                <div class="bulb yellow" id="North-yellow"></div>
+                                <div class="bulb green" id="North-green_s"><span>&darr;</span></div>
+                                <div class="bulb green" id="North-green_r"><span>&larr;</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEFT / WEST -->
+                <div class="road-cell left-cell">
+                    <div class="upload-section">
+                        <label for="upload-West" class="upload-btn">Upload Image</label>
+                        <input type="file" id="upload-West" accept="image/*" hidden onchange="handleUpload(event, 'West')">
+                        <div class="preview-box">
+                            <button class="close-btn" onclick="removeImage('West')" style="display:none;" id="close-West">&times;</button>
+                            <img id="preview-West" src="" alt="No Image" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="road horizontal-road west-road">
+                        <div class="road-label">WEST</div>
+                        <div class="stats-overlay">
+                            Count: <span id="count-West">0</span><br>
+                            Density: <span id="density-West" class="badge">N/A</span><br>
+                            Allocated Time: <strong id="allocated-West">0s</strong>
+                        </div>
+                        <div class="signal-box signal-west">
+                            <div class="timer" id="timer-West">0s</div>
+                            <div class="lights">
+                                <div class="bulb red" id="West-red"></div>
+                                <div class="bulb yellow" id="West-yellow"></div>
+                                <div class="bulb green" id="West-green_s"><span>&rarr;</span></div>
+                                <div class="bulb green" id="West-green_r"><span>&darr;</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER JUNCTION -->
+                <div class="center-junction"></div>
+
+                <!-- RIGHT / EAST -->
+                <div class="road-cell right-cell">
+                    <div class="road horizontal-road east-road">
+                        <div class="road-label">EAST</div>
+                        <div class="stats-overlay">
+                            Count: <span id="count-East">0</span><br>
+                            Density: <span id="density-East" class="badge">N/A</span><br>
+                            Allocated Time: <strong id="allocated-East">0s</strong>
+                        </div>
+                        <div class="signal-box signal-east">
+                            <div class="timer" id="timer-East">0s</div>
+                            <div class="lights">
+                                <div class="bulb red" id="East-red"></div>
+                                <div class="bulb yellow" id="East-yellow"></div>
+                                <div class="bulb green" id="East-green_s"><span>&larr;</span></div>
+                                <div class="bulb green" id="East-green_r"><span>&uarr;</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-section">
+                        <label for="upload-East" class="upload-btn">Upload Image</label>
+                        <input type="file" id="upload-East" accept="image/*" hidden onchange="handleUpload(event, 'East')">
+                        <div class="preview-box">
+                            <button class="close-btn" onclick="removeImage('East')" style="display:none;" id="close-East">&times;</button>
+                            <img id="preview-East" src="" alt="No Image" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM / SOUTH -->
+                <div class="road-cell bottom-cell">
+                    <div class="road vertical-road south-road">
+                        <div class="signal-box signal-south">
+                            <div class="timer" id="timer-South">0s</div>
+                            <div class="lights horizontal-lights">
+                                <div class="bulb red" id="South-red"></div>
+                                <div class="bulb yellow" id="South-yellow"></div>
+                                <div class="bulb green" id="South-green_s"><span>&uarr;</span></div>
+                                <div class="bulb green" id="South-green_r"><span>&rarr;</span></div>
+                            </div>
+                        </div>
+                        <div class="stats-overlay">
+                            Count: <span id="count-South">0</span><br>
+                            Density: <span id="density-South" class="badge">N/A</span><br>
+                            Allocated Time: <strong id="allocated-South">0s</strong>
+                        </div>
+                        <div class="road-label">SOUTH</div>
+                    </div>
+                    <div class="upload-section">
+                        <label for="upload-South" class="upload-btn">Upload Image</label>
+                        <input type="file" id="upload-South" accept="image/*" hidden onchange="handleUpload(event, 'South')">
+                        <div class="preview-box">
+                            <button class="close-btn" onclick="removeImage('South')" style="display:none;" id="close-South">&times;</button>
+                            <img id="preview-South" src="" alt="No Image" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
